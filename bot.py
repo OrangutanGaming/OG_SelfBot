@@ -1,12 +1,15 @@
 import discord
 from discord.ext import commands
 import SelfIDs
+import cogs.utils.prefix as Prefix
 
 startup_extensions = [
-    "cogs.fun"
+    "cogs.fun",
+    "cogs.eval"
 ]
 
-bot = commands.Bot(command_prefix="[s]", description="A Self Bot", self_bot=True)
+bot = commands.Bot(command_prefix=Prefix.prefixes, description="A Self Bot", max_messages=1000, self_bot=True)
+bot.remove_command("help")
 
 @bot.event
 async def on_ready():
@@ -17,13 +20,17 @@ async def on_ready():
     print(bot.user.id)
     print("------")
     print("Playing", gamename)
-    print("Prefixes: " + "[s]")
+    print("Prefixes: " + Prefix.Prefix())
 
 @bot.event
 async def on_message(message):
-    if message.author.bot and message.author.id != bot.user.id:
+    if message.author.id != bot.user.id:
         return
     await bot.process_commands(message)
+
+@bot.event
+async def on_message_edit(before, after):
+    await bot.process_commands(after)
 
 @bot.command()
 async def load(ctx, extension_name : str):
