@@ -12,7 +12,7 @@ class Gens():
 
         option = option.lower()
 
-        if option == "disc":
+        if option == "disc" or "discrim":
             option = "discriminator"
 
         output = ", ".join(x.name + "#" + x.discriminator for x in self.bot.users if getattr(x, option) == value)
