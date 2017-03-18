@@ -15,7 +15,7 @@ class Gens():
         if option == "disc":
             option = "discriminator"
 
-        output = ", ".join(x.name for x in self.bot.users if getattr(x, option) == value)
+        output = ", ".join(x.name + "#" + x.discriminator for x in self.bot.users if getattr(x, option) == value)
 
         output = f"All members with the {option.title()} of {value} on the same servers as `OGaming#7135`: " + "```" + output + "```"
 
