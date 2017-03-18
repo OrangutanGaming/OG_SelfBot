@@ -5,7 +5,8 @@ import cogs.utils.prefix as Prefix
 
 startup_extensions = [
     "cogs.fun",
-    "cogs.eval"
+    "cogs.eval",
+    "cogs.gens"
 ]
 
 bot = commands.Bot(command_prefix=Prefix.prefixes, description="A Self Bot", max_messages=1000, self_bot=True)
