@@ -8,8 +8,7 @@ class HepBot():
 
     async def on_message(self, message):
         def check(messge):
-            if "Here, take some credits. Enjoy!" in message.content: return True
-            else: return False
+            return "Here, take some credits. Enjoy!" in message.content
 
         try:
             msg = await self.bot.wait_for("message", check=check, timeout=5.0)
