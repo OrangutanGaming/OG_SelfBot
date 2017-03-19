@@ -7,14 +7,17 @@ class HepBot():
         self.bot = bot
 
     async def on_message(self, message):
-        def check(messge):
-            return "Here, take some credits. Enjoy!" in message.content
+        if "Here, take some credits. Enjoy!" in message.content:
+            await message.ack()
 
-        try:
-            msg = await self.bot.wait_for("message", check=check, timeout=5.0)
-        except asyncio.TimeoutError:
-            return
-        await msg.ack()
+        # def check(message):
+        #     return "Here, take some credits. Enjoy!" in message.content
+        #
+        # try:
+        #     msg = await self.bot.wait_for("message", check=check, timeout=5.0)
+        # except asyncio.TimeoutError:
+        #     return
+        # await msg.ack()
 
     @commands.command()
     async def hepbot(self, ctx):
@@ -26,7 +29,6 @@ class HepBot():
                 for channel in server.text_channels:
                     if "bot" in channel.name and "spam" in channel.name\
                             and not "music" in channel.name and not "hidden" in channel.name and not "mod" in channel.name:
-                        print(channel.name + " " + channel.guild.name)
                         channels.append(channel)
                         break
                     else:
@@ -44,8 +46,6 @@ class HepBot():
 
         await tmp.edit(content=f"Done. Sent to {counter} servers.")
         await ctx.message.delete()
-        # await asyncio.sleep(4)
-        # discord.utils.find(msg.msg == 1, channel.guild.)
 
 def setup(bot):
     bot.add_cog(HepBot(bot))
