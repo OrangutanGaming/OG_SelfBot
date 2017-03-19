@@ -22,7 +22,7 @@ class Fun():
         status = status.strip("`")
         await self.bot.change_presence(game=discord.Game(name=status))
         await asyncio.sleep(1)
-        await ctx.message.edit(content=f"**Playing** {guild.me.game}")
+        await ctx.message.edit(content=f"**Playing** {ctx.guild.me.game}")
 
     @commands.command()
     async def stat_test(self, ctx):
