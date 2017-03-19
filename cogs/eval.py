@@ -11,18 +11,17 @@ class Eval():
         self._last_result = None
 
     def cleanup_code(self, content):
-        """Automatically removes code blocks from the code."""
-        # remove ```py\n```
-        if content.startswith('```') and content.endswith('```'):
-            return '\n'.join(content.split('\n')[1:-1])
+        if content.startswith("```") and content.endswith("```"):
+            output = content[3:-3].rstrip("\n").lstrip("\n")
+            return output
 
         # remove `foo`
-        return content.strip('` \n')
+        return content.strip("` \n")
 
     def get_syntax_error(self, e):
         if e.text is None:
-            return '```py\n{0.__class__.__name__}: {0}\n```'.format(e)
-        return '```py\n{0.text}{1:>{0.offset}}\n{2}: {0}```'.format(e, '^', type(e).__name__)
+            return "```py\n{0.__class__.__name__}: {0}\n```".format(e)
+        return "```py\n{0.text}{1:>{0.offset}}\n{2}: {0}```".format(e, "^", type(e).__name__)
 
     @commands.command()
     async def eval(self, ctx, *, code : str):
@@ -59,16 +58,16 @@ class Eval():
 
         await original.edit(content="\n".join(lines))
 
-    @commands.command()
-    async def exec(self, ctx, *, body: str):
+    @commands.command(name="exec")
+    async def _exec(self, ctx, *, body: str):
         env = {
-            'bot': self.bot,
-            'ctx': ctx,
-            'channel': ctx.channel,
-            'author': ctx.author,
-            'server': ctx.guild,
-            'message': ctx.message,
-            '_': self._last_result
+            "bot": self.bot,
+            "ctx": ctx,
+            "channel": ctx.channel,
+            "author": ctx.author,
+            "server": ctx.guild,
+            "message": ctx.message,
+            "_": self._last_result
         }
 
         env.update(globals())
@@ -76,33 +75,33 @@ class Eval():
         body = self.cleanup_code(body)
         stdout = io.StringIO()
 
-        to_compile = 'async def func():\n%s' % textwrap.indent(body, '  ')
+        to_compile = "async def func():\n{}".format(textwrap.indent(body, "  "))
 
         try:
             exec(to_compile, env)
         except SyntaxError as e:
             return await ctx.send(self.get_syntax_error(e))
 
-        func = env['func']
+        func = env["func"]
         try:
             with redirect_stdout(stdout):
                 ret = await func()
         except Exception as e:
             value = stdout.getvalue()
-            await ctx.send('```py\n{}{}\n```'.format(value, traceback.format_exc()))
+            await ctx.send("```py\n{}{}\n```".format(value, traceback.format_exc()))
         else:
             value = stdout.getvalue()
             try:
-                await ctx.message.add_reaction('\u2705')
+                await ctx.message.add_reaction("\u2705")
             except:
                 pass
 
             if ret is None:
                 if value:
-                    await ctx.send('```py\n%s\n```' % value)
+                    await ctx.send("```py\n%s\n```" % value)
             else:
                 self._last_result = ret
-                await ctx.send('```py\n%s%s\n```' % (value, ret))
+                await ctx.send("```py\n%s%s\n```" % (value, ret))
 
 def setup(bot):
     bot.add_cog(Eval(bot))
