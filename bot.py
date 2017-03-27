@@ -9,7 +9,11 @@ startup_extensions = [
     "cogs.gens",
     "cogs.bot",
     "cogs.hepbot",
-    "cogs.ack"
+    "cogs.ack",
+    "cogs.bgt",
+    "cogs.clear",
+    "cogs.serverinfo",
+    "cogs.count"
 ]
 
 bot = commands.Bot(command_prefix=Prefix.prefixes, description="A Self Bot", max_messages=1000, self_bot=True)
