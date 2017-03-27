@@ -2,8 +2,13 @@ from discord.ext import commands
 import inspect
 import io
 from contextlib import redirect_stdout
-import textwrap
-import traceback
+import textwrap, traceback
+import argparse
+
+from sympy import *
+import sys
+import mpmath
+sys.modules["sympy.mpmath"] = mpmath
 
 class Eval():
     def __init__(self, bot):
@@ -58,7 +63,7 @@ class Eval():
 
         await original.edit(content="\n".join(lines))
 
-    @commands.command(name="exec")
+    @commands.command(name="exec", aliases = ["ex", "exed"])
     async def _exec(self, ctx, *, body: str):
         env = {
             "bot": self.bot,
@@ -91,10 +96,6 @@ class Eval():
             await ctx.send("```py\n{}{}\n```".format(value, traceback.format_exc()))
         else:
             value = stdout.getvalue()
-            try:
-                await ctx.message.add_reaction("\u2705")
-            except:
-                pass
 
             if ret is None:
                 if value:
@@ -102,6 +103,32 @@ class Eval():
             else:
                 self._last_result = ret
                 await ctx.send("```py\n%s%s\n```" % (value, ret))
+
+    @commands.command(aliases=["olve"])
+    async def solve(self, ctx, *, equation: str):
+        x, y, z = symbols("x y z")
+        Return = equation.split("` ")[1].replace(" ", "")
+        equation = equation.split("` ")[0].replace("`", "").replace(" = ", " - ").replace("=", "-")
+        result = solve(equation, Return)
+
+        lines = ["```py"]
+        lines.append(">>> {}".format(equation.replace("-", "=")))
+        lines.append(f">>> {result}")
+        lines.append("```")
+
+        await ctx.message.edit(content="\n".join(lines))
+
+    @commands.command()
+    async def argtest(self, ctx):
+        parser = argparse.ArgumentParser()
+        parser.add_argument("square", help="display a square of a given number",
+                            type=int)
+        args = parser.parse_args()
+        await ctx.send(args.square ** 2)
+
+    @commands.command()
+    async def content(self, ctx):
+        await ctx.send(ctx.message.content)
 
 def setup(bot):
     bot.add_cog(Eval(bot))
