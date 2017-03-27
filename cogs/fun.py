@@ -46,5 +46,13 @@ class Fun():
 
         await ctx.send("\n".join(map(to_string, characters)))
 
+    @commands.command()
+    async def cstatus(self, ctx, id: int):
+        user = discord.utils.get(self.bot.get_all_members(), id=id)
+        if not user:
+            await ctx.message.edit(content=f"Can't find a user with the ID of {id}")
+            return
+        await ctx.message.edit(content=f"{str(user)}'s status is: {str(user.status).title()}")
+
 def setup(bot):
     bot.add_cog(Fun(bot))
