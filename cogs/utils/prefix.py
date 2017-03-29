@@ -1,4 +1,4 @@
-prefixes = ["[s]", "s."]
+prefixes = ["[s]", "s.", "self."]
 
 def Prefix(quote = None):
     if not quote:
