@@ -1,5 +1,6 @@
 from discord.ext import commands
 import discord
+import cogs.utils.formatting as formatting
 
 class ServerInfo():
     def __init__(self, bot):
@@ -25,6 +26,7 @@ class ServerInfo():
             await ctx.message.edit(content="You must specify a role")
             return
 
+        oRole = formatting.quote(oRole)
         role = discord.utils.get(ctx.guild.roles, name=oRole)
 
         if not role:
@@ -36,7 +38,8 @@ class ServerInfo():
             if member.status is discord.Status.online or member.status is discord.Status.idle:
                 online += 1
 
-        await ctx.message.edit(content=f"There are {counter} people with the role `{role.name}`. {online} are online.")
+        await ctx.message.edit(content=f"There are {counter} people with the role `{role.name}`. "
+                                       f"{online} are online or idle.")
 
         if list:
             names=[]
@@ -44,7 +47,7 @@ class ServerInfo():
             for user in role.members:
                 uStatus = status(user)
                 if mention: names.append(f"{user.mention} {uStatus}")
-                else: names.append(f"{str(user)} {uStatus}")
+                else: names.append(f"`{str(user)}` {uStatus}")
             names = ", ".join(names)
             if len(names) > 1981: # msg doesn't breach 2k char limit
                 return
