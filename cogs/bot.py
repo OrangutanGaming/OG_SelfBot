@@ -8,7 +8,7 @@ class Bot():
         self.bot = bot
 
     @commands.command(aliases=["uinfo"])
-    async def userinfo(self, ctx, member: discord.Member = None):
+    async def userinfo(self, ctx, *, member: discord.Member = None):
         if not member:
             member = ctx.message.author
 
