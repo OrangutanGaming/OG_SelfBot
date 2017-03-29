@@ -42,8 +42,7 @@ async def on_message_edit(before, after):
 
 @bot.command()
 async def load(ctx, extension_name : str):
-    try:
-        bot.load_extension(extension_name)
+    try: bot.load_extension(extension_name)
     except (AttributeError, ImportError) as e:
         await ctx.send("```py\n{}: {}\n```".format(type(e).__name__, str(e)), delete_after=3)
         return
