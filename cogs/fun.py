@@ -93,7 +93,7 @@ class Fun():
     @commands.command(aliases=["emojis", "emote", "emotes"])
     async def emoji(self, ctx, emoji: str = None, edit = True):
         if not emoji:
-            await ctx.message.edit(content=f"All available emotes are: {Emojis.emojis}")
+            await ctx.message.edit(content=f"All available emotes are: {Emojis.rEmojis}")
             return
         if not emoji.lower() in Emojis.emojis:
             await ctx.message.edit(content=f"Can't find the emoji `{emoji}`.")
