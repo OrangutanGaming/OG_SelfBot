@@ -1,9 +1,11 @@
+import discord
 from discord.ext import commands
 import inspect
 import io
 from contextlib import redirect_stdout
 import textwrap, traceback
 import argparse
+import cogs.utils.formatting as formatting
 
 from sympy import *
 import sys
@@ -14,14 +16,6 @@ class Eval():
     def __init__(self, bot):
         self.bot = bot
         self._last_result = None
-
-    def cleanup_code(self, content):
-        if content.startswith("```") and content.endswith("```"):
-            output = content[3:-3].rstrip("\n").lstrip("\n")
-            return output
-
-        # remove `foo`
-        return content.strip("` \n")
 
     def get_syntax_error(self, e):
         if e.text is None:
@@ -77,7 +71,7 @@ class Eval():
 
         env.update(globals())
 
-        body = self.cleanup_code(body)
+        body = formatting.cleanup_code(body)
         stdout = io.StringIO()
 
         to_compile = "async def func():\n{}".format(textwrap.indent(body, "  "))
