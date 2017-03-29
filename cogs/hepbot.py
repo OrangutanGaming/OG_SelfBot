@@ -25,7 +25,8 @@ class HepBot():
         tmp = await ctx.send("Going...")
         counter = 0
         channels = []
-
+        banned_ids=[]
+        """
         banned_ids = [290953743233581057, # WarChat
                       166488311458824193, # RV
                       110373943822540800, # Discord Bots
@@ -33,8 +34,9 @@ class HepBot():
                       81384788765712384, # Discord API
                       109379086845009920, # V (old)
                       281968634086031363 # V (New)
-
                       ]
+        """
+
         banned_channel_names=["music", "hidden", "mod"]
         for server in self.bot.guilds:
             if discord.utils.find(lambda m: m.name == "HepBot", server.members):
