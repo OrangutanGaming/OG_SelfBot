@@ -3,6 +3,7 @@ from discord.ext import commands
 import time
 import asyncio
 import unicodedata
+import cogs.emojis as Emojis
 
 class Fun():
     def __init__(self, bot):
@@ -44,15 +45,73 @@ class Fun():
             name = unicodedata.name(c, "Name not found.")
             return fmt.format(digit, name, c)
 
-        await ctx.send("\n".join(map(to_string, characters)))
+        await ctx.message.edit("\n".join(map(to_string, characters)))
 
-    @commands.command()
-    async def cstatus(self, ctx, id: int):
-        user = discord.utils.get(self.bot.get_all_members(), id=id)
-        if not user:
+    @commands.command(aliases=["ustatus"])
+    async def cstatus(self, ctx, id):
+        try: id = int(id)
+        except: await ctx.message.edit(content="Type the ID!"); return
+        member = discord.utils.get(self.bot.get_all_members(), id=id)
+        if not member:
             await ctx.message.edit(content=f"Can't find a user with the ID of {id}")
             return
-        await ctx.message.edit(content=f"{str(user)}'s status is: {str(user.status).title()}")
+        await ctx.message.edit(content=f"{str(member)}'s status is: {str(member.status).title()}")
+
+    @commands.command()
+    async def profile(self, ctx, *, arg):
+        Int = True
+        try:
+            arg = int(arg)
+        except ValueError: # String
+            Int = False
+
+        if Int:
+            id = arg
+            member = discord.utils.get(ctx.guild.members, id=arg)
+
+            if not member:
+                await ctx.message.edit(content=f"Could not find the user with the ID of `{arg}` "
+                                               f"on the server `{ctx.guild.name}`")
+                return
+        elif not Int:
+            # await ctx.send("{0}, {1}".format(arg.split("#")[0], int(arg.split("#")[1])))
+            member = discord.utils.get(ctx.guild.members, name = arg.split("#")[0], discriminator = arg.split("#")[1])
+
+            if not member:
+                await ctx.message.edit(content=f"Could not find the user `{arg.split('#')[0]}` "
+                                               f"on the server `{ctx.guild.name}`")
+                return
+            id = member.id
+        else:
+            await ctx.send("Type check not working or float given.")
+            return
+
+        embed = discord.Embed(description=f"Profile for {str(member)}")
+        embed.add_field(name="Profile Link", value=f"<@{id}>")
+        await ctx.message.edit(content="", embed=embed)
+
+    @commands.command(aliases=["emojis", "emote", "emotes"])
+    async def emoji(self, ctx, emoji: str = None, edit = True):
+        if not emoji:
+            await ctx.message.edit(content=f"All available emotes are: {Emojis.emojis}")
+            return
+        if not emoji.lower() in Emojis.emojis:
+            await ctx.message.edit(content=f"Can't find the emoji `{emoji}`.")
+            return
+        emoji = emoji.lower()
+        final = getattr(Emojis, emoji)
+        if edit:
+            await ctx.message.edit(content=final)
+        else:
+            await ctx.send(final)
+
 
 def setup(bot):
     bot.add_cog(Fun(bot))
+
+# import discord
+# user = discord.utils.get(ctx.guild.members, id=80088516616269824)
+# if not user:
+#     await ctx.send(f"Can't find a user with the ID of {id}")
+#     return
+# await ctx.send(f"{str(user)}'s status is: {str(user.status).title()}")
