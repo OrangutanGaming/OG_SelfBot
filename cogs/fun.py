@@ -4,6 +4,7 @@ import time
 import asyncio
 import unicodedata
 import cogs.emojis as Emojis
+import inflect
 
 class Fun():
     def __init__(self, bot):
@@ -58,16 +59,14 @@ class Fun():
         await ctx.message.edit(content=f"{str(member)}'s status is: {str(member.status).title()}")
 
     @commands.command()
-    async def profile(self, ctx, *, arg):
-        Int = True
-        try:
-            arg = int(arg)
-        except ValueError: # String
-            Int = False
+    async def profile(self, ctx, *, arg = None):
+        if not arg: arg = str(ctx.author)
+
+        Int = arg.isdigit()
 
         if Int:
-            id = arg
-            member = discord.utils.get(ctx.guild.members, id=arg)
+            id = int(arg)
+            member = discord.utils.get(ctx.guild.members, id=id)
 
             if not member:
                 await ctx.message.edit(content=f"Could not find the user with the ID of `{arg}` "
@@ -86,7 +85,7 @@ class Fun():
             await ctx.send("Type check not working or float given.")
             return
 
-        embed = discord.Embed(description=f"Profile for {str(member)}")
+        embed = discord.Embed(description=f"Profile for {str(member)}", colour=member.colour)
         embed.add_field(name="Profile Link", value=f"<@{id}>")
         await ctx.message.edit(content="", embed=embed)
 
@@ -105,6 +104,30 @@ class Fun():
         else:
             await ctx.send(final)
 
+    @commands.command()
+    async def channels(self, ctx):
+        channels = []
+        for channel in ctx.guild.text_channels:
+            channels.append(channel.name.title())
+        await ctx.send(", ".join(channels))
+
+    @commands.command()
+    async def emojitext(self, ctx, *, text: str = None):
+        if not text: await ctx.send("No Text!"); return
+        text = text.lower()
+        msg = ""
+        p = inflect.engine()
+        chars = list(text)
+
+        for char in chars:
+            Int = char.isdigit()
+
+            if Int:
+                msg += f":{p.number_to_words(int(char))}: "
+            else:
+                msg += f":regional_indicator_{char}: "
+
+        await ctx.message.edit(content=msg)
 
 def setup(bot):
     bot.add_cog(Fun(bot))
@@ -115,3 +138,4 @@ def setup(bot):
 #     await ctx.send(f"Can't find a user with the ID of {id}")
 #     return
 # await ctx.send(f"{str(user)}'s status is: {str(user.status).title()}")
+
