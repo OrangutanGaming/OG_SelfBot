@@ -24,7 +24,7 @@ class Bot():
 
         roleString = ""
         for role in member.roles:
-            if role.name == '@everyone':
+            if role.name == "@everyone":
                 continue
             roleString += role.name + ", "
         roleString = roleString[:-2]
@@ -103,6 +103,9 @@ class Bot():
         embed.add_field(name="Region", value=server.region)
         embed.add_field(name="Member Count", value=server.member_count)
         embed.add_field(name="Bot Count", value=Bots(server))
+        embed.add_field(name="Text Channel Count", value=str(len(server.text_channels)))
+        embed.add_field(name="Voice Channel Count", value=str(len(server.voice_channels)))
+        embed.add_field(name="Total Channel Count", value=str(len(server.channels)))
         if server.icon_url:
             embed.set_image(url=server.icon_url)
             embed.add_field(name="Avatar URL", value=server.icon_url)

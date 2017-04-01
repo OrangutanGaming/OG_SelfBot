@@ -7,7 +7,7 @@ startup_extensions = [
     "cogs.fun",
     "cogs.eval",
     "cogs.gens",
-    "cogs.bot",
+    "cogs.botinfos",
     "cogs.hepbot",
     "cogs.ack",
     "cogs.bgt",
