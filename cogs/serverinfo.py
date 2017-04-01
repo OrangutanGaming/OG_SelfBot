@@ -54,18 +54,5 @@ class ServerInfo():
 
             await ctx.send(f"Their names are: {names}")
 
-    # @rolec.error
-    # async def handler(self, error, ctx):
-    #     await ctx.message.edit(content="Can't find the role {role}")
-
-    # @commands.command()
-    # async def command(self, arg: discord.Role):
-    #     return
-    #
-    # @command.error
-    # async def handler(self, error, ctx):
-    #     if error is discord.ext.commands.errors.BadArgument:
-    #         print(ctx.kwargs.get("arg"))
-
 def setup(bot):
     bot.add_cog(ServerInfo(bot))
