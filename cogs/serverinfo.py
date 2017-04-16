@@ -52,7 +52,7 @@ class ServerInfo():
             if len(names) > 1981: # msg doesn't breach 2k char limit
                 return
 
-            await ctx.send(f"Their names are: {names}")
+            await ctx.send(self.bot.blank + f"Their names are: {names}")
 
 def setup(bot):
     bot.add_cog(ServerInfo(bot))

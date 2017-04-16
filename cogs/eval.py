@@ -87,16 +87,16 @@ class Eval():
                 ret = await func()
         except Exception as e:
             value = stdout.getvalue()
-            await ctx.send("```py\n{}{}\n```".format(value, traceback.format_exc()))
+            await ctx.send(self.bot.blank + "```py\n{}{}\n```".format(value, traceback.format_exc()))
         else:
             value = stdout.getvalue()
 
             if ret is None:
                 if value:
-                    await ctx.send("```py\n%s\n```" % value)
+                    await ctx.send(self.bot.blank + "```py\n%s\n```" % value)
             else:
                 self._last_result = ret
-                await ctx.send("```py\n%s%s\n```" % (value, ret))
+                await ctx.send(self.bot.blank + "```py\n%s%s\n```" % (value, ret))
 
     @commands.command(aliases=["olve"])
     async def solve(self, ctx, *, equation: str):

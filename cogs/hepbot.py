@@ -22,7 +22,7 @@ class HepBot():
 
     @commands.command()
     async def hepbot(self, ctx):
-        tmp = await ctx.send("Going...")
+        tmp = await ctx.send(self.bot.blank + "Going...")
         counter = 0
         channels = []
         banned_ids=[]

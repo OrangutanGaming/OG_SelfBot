@@ -8,7 +8,7 @@ class Count():
     @commands.command(aliases=["mcount"])
     async def msgcount(self, ctx, user: discord.Member = None, channel: discord.TextChannel = None):
         counter = 0
-        tmp = await ctx.send("Counting messages...")
+        tmp = await ctx.send(self.bot.blank + "Counting messages...")
         if not user:
             user = ctx.message.author
         if not channel:
@@ -30,7 +30,7 @@ class Count():
     @commands.command(aliases=["amcount"])
     async def amsgcount(self, ctx, channel: discord.TextChannel = None):
         counter = 0
-        tmp = await ctx.send("Counting messages...")
+        tmp = await ctx.send(self.bot.blank + "Counting messages...")
         if not channel:
             channel = ctx.message.channel
         async for message in channel.history(before=ctx.message, limit=99):

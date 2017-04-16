@@ -20,20 +20,20 @@ class Clear():
                 count = len(deleted)
 
                 if count == 1:
-                    tmp = await ctx.send("Deleted {} message".format(count))
+                    tmp = await ctx.send(self.bot.blank + "Deleted {} message".format(count))
                 else:
-                    tmp = await ctx.send("Deleted {} messages".format(count))
+                    tmp = await ctx.send(self.bot.blank + "Deleted {} messages".format(count))
                 await asyncio.sleep(3)
                 await ctx.channel.delete_messages([tmp, ctx.message])
 
 
             except discord.Forbidden as error:
-                # await ctx.send("{} does not have permissions".format(self.bot.user.name))
+                # await ctx.send(self.bot.blank + "{} does not have permissions".format(self.bot.user.name))
                 # TODO Fix ^
                 return
 
         else:
-            await ctx.send("You must have the `Manage Messages` permission in order to run that command")
+            await ctx.send(self.bot.blank + "You must have the `Manage Messages` permission in order to run that command")
 
 def setup(bot):
     bot.add_cog(Clear(bot))

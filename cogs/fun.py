@@ -5,10 +5,33 @@ import asyncio
 import unicodedata
 import cogs.emojis as Emojis
 import inflect
+import upsidedown
 
 class Fun():
     def __init__(self, bot):
         self.bot = bot
+
+    def texttoemoji(self, text: str = None):
+        if not text:
+            return
+        text = text.lower()
+        msg = ""
+        p = inflect.engine()
+        chars = list(text)
+
+        for char in chars:
+            Int = char.isdigit()
+
+            if Int:
+                msg += f":{p.number_to_words(int(char))}: "
+            else:
+                msg += f":regional_indicator_{char}: "
+                # " ".join(["   " if x==" " else ":regional_indicator_{}:".format(x) for x in "hm hm"])
+
+        return msg
+
+    def upsidedown(self, text: str):
+        return upsidedown.transform(text)
 
     @commands.command()
     async def ping(self, ctx):
@@ -36,7 +59,7 @@ class Fun():
     async def charinfo(self, ctx, *, characters: str):
 
         if len(characters) > 15:
-            await ctx.send(f"Too many characters ({len(characters)}/15)")
+            await ctx.send(self.bot.blank + f"Too many characters ({len(characters)}/15)")
             return
 
         fmt = "`\\U{0:>08}`: {1} - {2} \N{EM DASH} <http://www.fileformat.info/info/unicode/char/{0}>"
@@ -49,7 +72,8 @@ class Fun():
         await ctx.message.edit("\n".join(map(to_string, characters)))
 
     @commands.command(aliases=["ustatus"])
-    async def cstatus(self, ctx, id):
+    async def cstatus(self, ctx, id=None):
+        if not id: await ctx.message.edit(content="Type the ID!"); return
         try: id = int(id)
         except: await ctx.message.edit(content="Type the ID!"); return
         member = discord.utils.get(self.bot.get_all_members(), id=id)
@@ -73,7 +97,7 @@ class Fun():
                                                f"on the server `{ctx.guild.name}`")
                 return
         elif not Int:
-            # await ctx.send("{0}, {1}".format(arg.split("#")[0], int(arg.split("#")[1])))
+            # await ctx.send(self.bot.blank + "{0}, {1}".format(arg.split("#")[0], int(arg.split("#")[1])))
             member = discord.utils.get(ctx.guild.members, name = arg.split("#")[0], discriminator = arg.split("#")[1])
 
             if not member:
@@ -82,7 +106,7 @@ class Fun():
                 return
             id = member.id
         else:
-            await ctx.send("Type check not working or float given.")
+            await ctx.send(self.bot.blank + "Type check not working or float given.")
             return
 
         embed = discord.Embed(description=f"Profile for {str(member)}", colour=member.colour)
@@ -92,13 +116,14 @@ class Fun():
     @commands.command(aliases=["emojis", "emote", "emotes"])
     async def emoji(self, ctx, emoji: str = None, edit = True):
         if not emoji:
-            await ctx.message.edit(content=f"All available emotes are: {Emojis.rEmojis}")
+            allEmojis = "`"+"`, `".join(Emojis.emojis.keys())+"`"
+            await ctx.message.edit(content=f"All available emotes are: {allEmojis}")
             return
         if not emoji.lower() in Emojis.emojis:
             await ctx.message.edit(content=f"Can't find the emoji `{emoji}`.")
             return
         emoji = emoji.lower()
-        final = getattr(Emojis, emoji)
+        final = Emojis.emojis[emoji]
         if edit:
             await ctx.message.edit(content=final)
         else:
@@ -109,25 +134,79 @@ class Fun():
         channels = []
         for channel in ctx.guild.text_channels:
             channels.append(channel.name.title())
-        await ctx.send(", ".join(channels))
+        await ctx.message.edit(content=self.bot.blank + f"All text channels on the server {ctx.guild.name}: " + ", ".join(channels))
+
+    @commands.command()
+    async def roles(self, ctx):
+        roles = []
+        for role in ctx.guild.roles:
+            roles.append(role.name)
+        await ctx.message.edit(content=self.bot.blank + f"All roles on the server {ctx.guild.name}: " + "`" + "`, `".join(roles)+"`")
 
     @commands.command()
     async def emojitext(self, ctx, *, text: str = None):
-        if not text: await ctx.send("No Text!"); return
-        text = text.lower()
-        msg = ""
-        p = inflect.engine()
-        chars = list(text)
 
-        for char in chars:
-            Int = char.isdigit()
+        msg = self.texttoemoji(text)
 
-            if Int:
-                msg += f":{p.number_to_words(int(char))}: "
-            else:
-                msg += f":regional_indicator_{char}: "
+        if not msg:
+            await ctx.send(self.bot.blank + "No Text!")
+            return
 
         await ctx.message.edit(content=msg)
+
+    @commands.command(enabled=False)
+    async def react(self, ctx, channel: discord.TextChannel = None, id: int = None, *, text: str = None):
+        if not channel:
+            await ctx.send(self.bot.blank + "No Channel")
+            return
+        if not id:
+            await ctx.send(self.bot.blank + "No Message ID")
+            return
+        if not text:
+            await ctx.send(self.bot.blank + "Text?")
+
+        message = channel.get_message(id)
+
+        msg = self.texttoemoji(text)
+        if not msg:
+            await ctx.send(self.bot.blank + "No `msg` var")
+
+        return
+
+    @commands.command(name="upsidedown")
+    async def _upsidedown(self, ctx, *, text: str):
+        await ctx.send(self.upsidedown(text))
+
+    @commands.command()
+    async def quick(self, ctx, *, message = None):
+        if not message: return
+        message = message.strip("`")
+        if "@" in message:
+            pass
+        msg = await ctx.send(message)
+        await ctx.message.delete()
+        await msg.delete()
+
+    @commands.command()
+    async def quick_mention(self, ctx, id = None):
+        if not id or not id.isdigit():
+            return
+        id = int(id)
+        user = self.bot.get_user(id)
+        if not user:
+            await ctx.message.edit(content="Can't find that user")
+            return
+        msg = await ctx.send(user.mention)
+        await ctx.message.delete()
+        await msg.delete()
+
+    @commands.command(aliases=["picture", "photo"])
+    async def pic(self, ctx, *, url):
+        embed = discord.Embed(title="Picture")
+        embed.set_image(url=url)
+
+        try: await ctx.message.edit(content="", embed=embed)
+        except: await ctx.send("Can't find that link.")
 
 def setup(bot):
     bot.add_cog(Fun(bot))
@@ -135,7 +214,6 @@ def setup(bot):
 # import discord
 # user = discord.utils.get(ctx.guild.members, id=80088516616269824)
 # if not user:
-#     await ctx.send(f"Can't find a user with the ID of {id}")
+#     await ctx.send(self.bot.blank + f"Can't find a user with the ID of {id}")
 #     return
-# await ctx.send(f"{str(user)}'s status is: {str(user.status).title()}")
-
+# await ctx.send(self.bot.blank + f"{str(user)}'s status is: {str(user.status).title()}")

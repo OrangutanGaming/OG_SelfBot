@@ -112,5 +112,10 @@ class Bot():
 
         await ctx.message.edit(content="", embed=embed)
 
+
+    @commands.command()
+    async def member_count(self, ctx):
+        await ctx.message.edit(content="`{0.name}` has {0.member_count} members.".format(ctx.guild))
+
 def setup(bot):
     bot.add_cog(Bot(bot))
