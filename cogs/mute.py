@@ -42,7 +42,7 @@ class Mute():
         choice = choice.lower().split(" ")
         if choice[0] == "mention":
             if choice[1].lower() == "false": option = "False"
-            elif choice[1].lower() == "rrue": option = "True"
+            elif choice[1].lower() == "true": option = "True"
             else: await ctx.send(f"I don't recognise `{choice[1]}`"); return
             try:
                 choice[2]
@@ -68,8 +68,11 @@ class Mute():
             with open(f"{cDir}\muteList.json", "r") as muteListFile:
                 muteList = json.load(muteListFile)
                 muteListFile.close()
-            if muteList[message.channel.id] == "True":
-                await message.channel.ack()
+            try:
+                if muteList[message.channel.id] == "True":
+                    await message.channel.ack()
+            except KeyError:
+                pass
 
 def setup(bot):
     bot.add_cog(Mute(bot))
