@@ -67,7 +67,6 @@ class Mute():
         if message.mention_everyone:
             with open(f"{cDir}\muteList.json", "r") as muteListFile:
                 muteList = json.load(muteListFile)
-                muteListFile.close()
             try:
                 if muteList[message.channel.id] == "True":
                     await message.channel.ack()
