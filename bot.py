@@ -3,6 +3,7 @@ from discord.ext import commands
 import SelfIDs
 import cogs.utils.prefix as Prefix
 import cogs.emojis as Emojis
+import os, json
 
 startup_extensions = [
     "cogs.fun",
@@ -14,12 +15,29 @@ startup_extensions = [
     "cogs.bgt",
     "cogs.clear",
     "cogs.serverinfo",
-    "cogs.count"
+    "cogs.count",
+    "cogs.mute",
+    "cogs.discrim"
 ]
+
+cDir = os.path.dirname(os.path.abspath(__file__))
+
+# try:
+#     f = open(f"{cDir}/muteList.json", "x+")
+# except FileExistsError:
+#     f = open(f"{cDir}/muteList.json", "r+")
+#     json.dump({}, f)
+# f.close()
+
+with open(f"{cDir}\muteList.json") as OmuteListFile:
+    muteList = json.load(OmuteListFile)
+    muteListFile = OmuteListFile
 
 bot = commands.Bot(command_prefix=Prefix.prefixes, description="A Self Bot", max_messages=1000, self_bot=True)
 bot.remove_command("help")
 bot.blank = "\u200B"
+bot.muteList = muteList
+bot.muteListFile = muteListFile
 
 
 def emojireplacetext(message):
@@ -52,7 +70,7 @@ async def on_message(message):
     if message.author.id != bot.user.id:
         return
     if "[" in message.content:
-        if not "```" in message.content or not "\u200B" in message.content:
+        if "```" not in message.content and "\u200B" not in message.content:
             await message.edit(content=(emojireplacetext(message)))
     await bot.process_commands(message)
 

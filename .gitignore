@@ -2,3 +2,4 @@
 __pycache__/
 extension.py
 settings.json
+muteList.json
