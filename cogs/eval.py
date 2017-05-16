@@ -22,7 +22,7 @@ class Eval():
             return "```py\n{0.__class__.__name__}: {0}\n```".format(e)
         return "```py\n{0.text}{1:>{0.offset}}\n{2}: {0}```".format(e, "^", type(e).__name__)
 
-    @commands.command()
+    @commands.command(aliases=["ev"])
     async def eval(self, ctx, *, code : str):
         original = ctx.message
 

@@ -4,6 +4,13 @@ import json, os
 cDir = os.path.dirname(os.path.abspath(__file__))
 cDir = cDir.replace("\\cogs", "")
 
+pingBlacklist = [
+    215310608789143552, # RSB-Veteran
+    290955609744867328, # Warchat-Raiding
+    176597325249118208, # Frozenballz-GenAnnounce
+    164832838087081984 # Q-Raids
+]
+
 class Mute():
     def __init__(self, bot):
         self.bot = bot
@@ -34,7 +41,7 @@ class Mute():
     # async def on_channel_delete(self, channel):
     #     self.muteListUpdate()
 
-    @commands.command(aliases=["ignore"])
+    @commands.command(aliases=["ignore"], enabled=False)
     async def mute(self, ctx, *, choice = None):
         if not choice:
             await ctx.send("<Mention> <True/False> (Channel)")
@@ -54,7 +61,7 @@ class Mute():
                     return
 
             except: channelID = ctx.channel.id
-            with open(f"{cDir}\muteList.json", "r+") as muteListFile:
+            with open(f"{cDir}\muteList.json", "w+") as muteListFile:
                 new = json.load(muteListFile)
                 new[channelID] = option
                 json.dump(new, muteListFile, ensure_ascii=False, indent=4)
@@ -64,14 +71,16 @@ class Mute():
         await ctx.send("Set")
 
     async def on_message(self, message):
-        if message.mention_everyone:
-            with open(f"{cDir}\muteList.json", "r") as muteListFile:
-                muteList = json.load(muteListFile)
-            try:
-                if muteList[message.channel.id] == "True":
-                    await message.channel.ack()
-            except KeyError:
-                pass
+        if "@everyone" in message.content or "@here" in message.content:
+            if message.channel.id in pingBlacklist:
+                await message.ack()
+            # with open(f"{cDir}\muteList.json", "r") as muteListFile:
+            #     muteList = json.load(muteListFile)
+            # try:
+            #     if muteList[message.channel.id] == "True":
+            #         await message.channel.ack()
+            # except KeyError:
+            #     pass
 
 def setup(bot):
     bot.add_cog(Mute(bot))

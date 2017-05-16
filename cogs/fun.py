@@ -134,14 +134,14 @@ class Fun():
         channels = []
         for channel in ctx.guild.text_channels:
             channels.append(channel.name.title())
-        await ctx.message.edit(content=self.bot.blank + f"All text channels on the server {ctx.guild.name}: " + ", ".join(channels))
+        await ctx.message.edit(content=self.bot.blank + f"All text channels on the server {ctx.guild.name}: `" + "`, `".join(channels) + "`")
 
     @commands.command()
     async def roles(self, ctx):
         roles = []
         for role in ctx.guild.roles:
             roles.append(role.name)
-        await ctx.message.edit(content=self.bot.blank + f"All roles on the server {ctx.guild.name}: " + "`" + "`, `".join(roles)+"`")
+        await ctx.message.edit(content=self.bot.blank + f"All roles on the server `{ctx.guild.name}`: " + "`" + "`, `".join(roles)+"`")
 
     @commands.command()
     async def emojitext(self, ctx, *, text: str = None):
@@ -202,7 +202,7 @@ class Fun():
 
     @commands.command(aliases=["picture", "photo"])
     async def pic(self, ctx, *, url):
-        embed = discord.Embed(title="Picture")
+        embed = discord.Embed(title="Picture", url=url)
         embed.set_image(url=url)
 
         try: await ctx.message.edit(content="", embed=embed)
@@ -217,3 +217,44 @@ def setup(bot):
 #     await ctx.send(self.bot.blank + f"Can't find a user with the ID of {id}")
 #     return
 # await ctx.send(self.bot.blank + f"{str(user)}'s status is: {str(user.status).title()}")
+
+# blacklist = [
+#     "bots",
+#     "orangutan",
+#     "role troll",
+#     "v alliance leader",
+#     "itrust",
+#     "moderator",
+#     "server admin"
+# ]
+# roles = []
+# for role in ctx.guild.roles:
+#     if role.hoist and role.name.lower() not in blacklist:
+#         roles.append(role.name)
+#
+# rolesS = "\n".join(roles)
+# await ctx.send(f"```{rolesS}```")
+#
+# for member in ctx.guild.members:
+#     for role in member.roles:
+#         if role.name in roles:
+#             await member.add_roles(discord.utils.get(ctx.guild.roles, name = "Clan Member"))
+#
+# await ctx.send("Done")
+#
+# counter = 0
+# for server in bot.guilds:
+#     try:
+#         await server.default_channel("Just to remind you, we have a Discord server: https://discord.gg/duRB6Qg")
+#     except discord.Forbidden:
+#         counter += 1
+# await ctx.send(f"Done. Failed {counter} times.")
+#
+# for server in bot.guilds:
+#     try:
+#         async for message in server.default_channel.history(limit=200):
+#                 if "Just to remind you, we have a Discord server" in message.content and message.id != ctx.message.id and ctx.author.id == 150750980097441792:
+#                     try: await message.delete()
+#                     except: continue
+#     except:
+#         continue

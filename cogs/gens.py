@@ -18,7 +18,7 @@ class Gens():
         output = ", ".join(str(x) for x in self.bot.users if getattr(x, option) == value)
 
         if not output: output = f"There are no members with the {option.title()} of {value}"
-        else: output = f"All members with the {option.title()} of {value} on the same servers as `OGaming#7135`: " + "```" + output + "```"
+        else: output = f"All members with the {option.title()} of `{value}` on the same servers as `{self.bot.user}`: " + "```" + output + "```"
 
         await ctx.message.edit(content=output)
 

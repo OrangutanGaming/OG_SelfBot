@@ -35,11 +35,12 @@ class ServerInfo():
 
         counter = len(role.members)
         for member in role.members:
-            if member.status is discord.Status.online or member.status is discord.Status.idle:
+            if member.status is not discord.Status.offline:
                 online += 1
 
+
         await ctx.message.edit(content=f"There are {counter} people with the role `{role.name}`. "
-                                       f"{online} are online or idle.")
+                                       f"{online} are online.")
 
         if list:
             names=[]

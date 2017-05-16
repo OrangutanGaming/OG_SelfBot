@@ -4,6 +4,7 @@ import SelfIDs
 import cogs.utils.prefix as Prefix
 import cogs.emojis as Emojis
 import os, json
+import datetime
 
 startup_extensions = [
     "cogs.fun",
@@ -70,8 +71,10 @@ async def on_message(message):
     if message.author.id != bot.user.id:
         return
     if "[" in message.content:
-        if "```" not in message.content and "\u200B" not in message.content:
+        if "`" not in message.content and "\u200B" not in message.content:
             await message.edit(content=(emojireplacetext(message)))
+    if "Nihaal" in message.content:
+        await message.edit(content=message.content.replace("Nihaal", "*****"))
     await bot.process_commands(message)
 
 @bot.event
@@ -83,18 +86,41 @@ async def on_message_edit(before, after):
             await after.edit(content=(emojireplacetext(after)))
     await bot.process_commands(after)
 
-@bot.command()
+@bot.event
+async def on_guild_remove(guild):
+    embed = discord.Embed(description=f"<@{bot.user.id}> left the guild {guild.name}")
+    embed.add_field(name="Owner", value=f"{str(guild.owner)} ({guild.owner.id}) <@{guild.owner.id}>")
+    embed.set_footer(text=("Server left on " + datetime.datetime.utcnow().strftime("%A %d %B %Y at %H:%M:%S")))
+
+    if guild.icon_url:
+        embed.set_image(url=guild.icon_url)
+        embed.add_field(name="Server Icon URL", value=guild.icon_url)
+
+    await bot.get_channel(304597561615056899).send(embed=embed)
+
+@bot.command(hidden=True)
 async def load(ctx, extension_name : str):
-    try: bot.load_extension(extension_name)
+    try:
+        bot.load_extension(extension_name)
     except (AttributeError, ImportError) as e:
         await ctx.send(bot.blank + "```py\n{}: {}\n```".format(type(e).__name__, str(e)), delete_after=3)
         return
     await ctx.send(bot.blank + "{} loaded.".format(extension_name), delete_after=3)
 
-@bot.command()
+@bot.command(hidden=True)
 async def unload(ctx, extension_name : str):
     bot.unload_extension(extension_name)
     await ctx.send(bot.blank + "{} unloaded.".format(extension_name), delete_after=3)
+
+@bot.command(hidden=True)
+async def shutdown(ctx):
+    """Shutdown"""
+    try:
+        await ctx.send("System Shutting down.")
+        await bot.logout()
+        await bot.close()
+    except:
+        await ctx.send("Error!")
 
 
 if __name__ == "__main__":

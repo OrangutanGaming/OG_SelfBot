@@ -61,8 +61,10 @@ emojis = {
     "kiss2": "( ˘ ³˘)❤",
     "kiss3": "(ΘεΘ)",
     "happy3": "(◎ヮ◎)",
-    "shrug": "┐(￣ー￣)┌",
-    "mustache": "( ￣┏＿┓￣)"
+    "shrug2": "┐(￣ー￣)┌",
+    "mustache": "( ￣┏＿┓￣)",
+    "shrug": "¯\_(ツ)_/¯",
+    "infinity": "∞"
 }
 
 # dir = dir()

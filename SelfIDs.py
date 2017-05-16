@@ -7,6 +7,7 @@ with open(f"{cDir}/settings.json") as data_file:
     data_file.close()
 
 token = settings["token"]
+password = settings["password"]
 
 if token == "":
     print("No Token Given")
