@@ -1,4 +1,5 @@
 from discord.ext import commands
+import SelfIDs
 
 class Discriminator():
     def __init__(self, bot):
@@ -19,6 +20,7 @@ class Discriminator():
                       "1234",
                       "0002",
                       "0003",
+                      "0004",
                       "0005",
                       "0006",
                       "0007",
