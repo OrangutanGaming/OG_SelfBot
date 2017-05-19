@@ -30,15 +30,15 @@ cDir = os.path.dirname(os.path.abspath(__file__))
 #     json.dump({}, f)
 # f.close()
 
-with open(f"{cDir}\muteList.json") as OmuteListFile:
-    muteList = json.load(OmuteListFile)
-    muteListFile = OmuteListFile
+# with open(f"{cDir}\muteList.json") as OmuteListFile:
+#     muteList = json.load(OmuteListFile)
+#     muteListFile = OmuteListFile
 
 bot = commands.Bot(command_prefix=Prefix.prefixes, description="A Self Bot", max_messages=1000, self_bot=True)
 bot.remove_command("help")
 bot.blank = "\u200B"
-bot.muteList = muteList
-bot.muteListFile = muteListFile
+# bot.muteList = muteList
+# bot.muteListFile = muteListFile
 
 
 def emojireplacetext(message):
