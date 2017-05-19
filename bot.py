@@ -98,7 +98,7 @@ async def on_guild_remove(guild):
 
     await bot.get_channel(304597561615056899).send(embed=embed)
 
-@bot.command(hidden=True)
+@bot.command()
 async def load(ctx, extension_name : str):
     try:
         bot.load_extension(extension_name)
@@ -107,12 +107,12 @@ async def load(ctx, extension_name : str):
         return
     await ctx.send(bot.blank + "{} loaded.".format(extension_name), delete_after=3)
 
-@bot.command(hidden=True)
+@bot.command()
 async def unload(ctx, extension_name : str):
     bot.unload_extension(extension_name)
     await ctx.send(bot.blank + "{} unloaded.".format(extension_name), delete_after=3)
 
-@bot.command(hidden=True)
+@bot.command()
 async def shutdown(ctx):
     """Shutdown"""
     try:
@@ -121,6 +121,18 @@ async def shutdown(ctx):
         await bot.close()
     except:
         await ctx.send("Error!")
+
+@bot.command()
+async def shutdownall(ctx):
+    prefixes = [
+        "o!",
+        "q!",
+        "t!",
+        "v!",
+        "s."
+    ]
+    for bot in prefixes:
+        await ctx.send(f"{bot}shutdown")
 
 
 if __name__ == "__main__":
