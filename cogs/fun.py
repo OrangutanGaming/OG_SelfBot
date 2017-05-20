@@ -6,6 +6,7 @@ import unicodedata
 import cogs.emojis as Emojis
 import inflect
 import upsidedown
+import datetime
 
 class Fun():
     def __init__(self, bot):
@@ -207,6 +208,34 @@ class Fun():
 
         try: await ctx.message.edit(content="", embed=embed)
         except: await ctx.send("Can't find that link.")
+
+    @commands.command(aliases=["mutualguilds", "mutualg", "mutuals"])
+    async def mutualservers(self, ctx, user: discord.User = None):
+        if not user:
+            await ctx.send("Give the user!")
+            return
+
+        profile = await user.profile()
+        amount = profile.mutual_guilds
+        embed = discord.Embed(title=f"Amount of mutual guilds for {user}", description=f"Amount of mutual guilds with "
+                                                                                       f"{user.mention}")
+        embed.add_field(name="Mutual Guilds", value=str(amount))
+        embed.set_footer(text=("Mutual Guilds since " + datetime.datetime.utcnow().strftime("%A %d %B %Y at %H:%M:%S")))
+
+    @commands.command()
+    async def highestmutual(self, ctx):
+        top = ["None", 0]
+        for user in self.bot.users:
+            profile = await user.profile()
+            amount = profile.mutual_guilds
+
+            if amount > top[1]:
+                amount = [str(user), amount]
+
+            elif amount == top[1]:
+                pass
+
+        await ctx.send(f"The person with the most mutual guilds with {self.bot.user} is {top[0]} at {top[1]}")
 
 def setup(bot):
     bot.add_cog(Fun(bot))
