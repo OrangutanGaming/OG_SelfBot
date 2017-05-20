@@ -7,6 +7,7 @@ import cogs.emojis as Emojis
 import inflect
 import upsidedown
 import datetime
+from collections import Counter
 
 class Fun():
     def __init__(self, bot):
@@ -227,20 +228,35 @@ class Fun():
 
         await ctx.send(embed=embed)
 
+    # @commands.command()
+    # async def highestmutual(self, ctx):
+    #     top = ["None", 0]
+    #     for member in self.bot.get_all_members():
+    #         profile = await member.profile()
+    #         amount = len(profile.mutual_guilds)
+    #
+    #         if amount > top[1]:
+    #             top = [str(member), amount]
+    #
+    #         elif amount == top[1]:
+    #             pass
+    #
+    #     await ctx.send(f"The person with the most mutual guilds with {self.bot.user} is {top[0]} at {top[1]}")
+
     @commands.command()
     async def highestmutual(self, ctx):
-        top = ["None", 0]
-        for member in self.bot.get_all_members:
-            profile = await member.profile()
-            amount = len(profile.mutual_guilds)
+        members = Counter(str(m).replace("`", "\\`") for m in self.bot.get_all_members() if m.bot is False)
+        top = members.most_common(11)[1:] # Remove Myself
+        result = []
+        for index, (member, count) in enumerate(top, 1):
+            if index != 10:
+                result.append("{}\u20e3: {} ({} servers)".format(index, member, count))
+            else:
+                result.append("\U0001f51f: {} ({} servers)".format(member, count))
 
-            if amount > top[1]:
-                top = [str(member), amount]
+        message = "\n".join(result)
 
-            elif amount == top[1]:
-                pass
-
-        await ctx.send(f"The person with the most mutual guilds with {self.bot.user} is {top[0]} at {top[1]}")
+        await ctx.send("Leaderboard for mutual servers\n" + message)
 
 def setup(bot):
     bot.add_cog(Fun(bot))
