@@ -64,7 +64,9 @@ emojis = {
     "shrug2": "┐(￣ー￣)┌",
     "mustache": "( ￣┏＿┓￣)",
     "shrug": "¯\_(ツ)_/¯",
-    "infinity": "∞"
+    "infinity": "∞",
+    "why": "щ(ಠ益ಠщ)",
+    "facepalm": "(－‸ლ)"
 }
 
 # dir = dir()
