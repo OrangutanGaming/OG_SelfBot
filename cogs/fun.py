@@ -210,16 +210,19 @@ class Fun():
         except: await ctx.send("Can't find that link.")
 
     @commands.command(aliases=["mutualguilds", "mutualg", "mutuals"])
-    async def mutualservers(self, ctx, user: discord.User = None):
+    async def mutualservers(self, ctx, user: discord.User = None, list = False):
         if not user:
             await ctx.send("Give the user!")
             return
 
         profile = await user.profile()
-        amount = profile.mutual_guilds
+        amount = len(profile.mutual_guilds)
         embed = discord.Embed(title=f"Amount of mutual guilds for {user}", description=f"Amount of mutual guilds with "
                                                                                        f"{user.mention}")
         embed.add_field(name="Mutual Guilds", value=str(amount))
+        if list:
+            listGuilds = ", ".join(x.name for x in profile.mutual_guilds)
+            embed.add_field(name="List of Mutual Guilds", value=listGuilds)
         embed.set_footer(text=("Mutual Guilds since " + datetime.datetime.utcnow().strftime("%A %d %B %Y at %H:%M:%S")))
 
         await ctx.send(embed=embed)
@@ -229,7 +232,7 @@ class Fun():
         top = ["None", 0]
         for user in self.bot.users:
             profile = await user.profile()
-            amount = profile.mutual_guilds
+            amount = len(profile.mutual_guilds)
 
             if amount > top[1]:
                 top = [str(user), amount]
