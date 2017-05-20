@@ -222,6 +222,8 @@ class Fun():
         embed.add_field(name="Mutual Guilds", value=str(amount))
         embed.set_footer(text=("Mutual Guilds since " + datetime.datetime.utcnow().strftime("%A %d %B %Y at %H:%M:%S")))
 
+        await ctx.send(embed=embed)
+
     @commands.command()
     async def highestmutual(self, ctx):
         top = ["None", 0]
@@ -230,7 +232,7 @@ class Fun():
             amount = profile.mutual_guilds
 
             if amount > top[1]:
-                amount = [str(user), amount]
+                top = [str(user), amount]
 
             elif amount == top[1]:
                 pass
