@@ -143,15 +143,15 @@ if __name__ == "__main__":
             exc = "{}: {}".format(type(e).__name__, e)
             print("Failed to load extension {}\n{}".format(extension, exc))
 
-# @bot.event
-# async def on_command_error(error, ctx):
-#     if isinstance(error, commands.MissingRequiredArgument):
-#         print(error)
-#     elif isinstance(error, commands.errors.CommandNotFound):
-#         print("`{}` is not a valid command".format(ctx.invoked_with))
-#     elif isinstance(error, commands.errors.CommandInvokeError):
-#         print(error)
-#     else:
-#         print(error)
+@bot.event
+async def on_command_error(ctx, error):
+    if isinstance(error, commands.MissingRequiredArgument):
+        print(error)
+    elif isinstance(error, commands.errors.CommandNotFound):
+        print("`{}` is not a valid command".format(ctx.invoked_with))
+    elif isinstance(error, commands.errors.CommandInvokeError):
+        print(error)
+    else:
+        print(error)
 
 bot.run(SelfIDs.token, bot=False)
