@@ -148,7 +148,7 @@ async def on_command_error(ctx, error):
     if isinstance(error, commands.MissingRequiredArgument):
         print(error)
     elif isinstance(error, commands.errors.CommandNotFound):
-        print("`{}` is not a valid command".format(ctx.invoked_with))
+       await ctx.send("`{}` is not a valid command".format(ctx.invoked_with))
     elif isinstance(error, commands.errors.CommandInvokeError):
         print(error)
     else:
