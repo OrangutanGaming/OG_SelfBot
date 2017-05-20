@@ -230,12 +230,12 @@ class Fun():
     @commands.command()
     async def highestmutual(self, ctx):
         top = ["None", 0]
-        for user in self.bot.users:
-            profile = await user.profile()
+        for member in self.bot.get_all_members:
+            profile = await member.profile()
             amount = len(profile.mutual_guilds)
 
             if amount > top[1]:
-                top = [str(user), amount]
+                top = [str(member), amount]
 
             elif amount == top[1]:
                 pass
