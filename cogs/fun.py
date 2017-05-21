@@ -245,6 +245,9 @@ class Fun():
 
     @commands.command()
     async def highestmutual(self, ctx):
+        try: await ctx.message.add_reaction("\u2705")
+        except discord.Forbidden: pass
+
         members = Counter(str(m).replace("`", "\\`") for m in self.bot.get_all_members() if m.bot is False)
         top = members.most_common(11)[1:] # Remove Myself
         result = []
@@ -257,6 +260,7 @@ class Fun():
         message = "\n".join(result)
 
         await ctx.send("Leaderboard for mutual servers\n" + message)
+        await ctx.message.delete()
 
 def setup(bot):
     bot.add_cog(Fun(bot))
