@@ -4,6 +4,7 @@ import time
 import asyncio
 import unicodedata
 import cogs.emojis as Emojis
+import cogs.glyphs as Glyphs
 import inflect
 import upsidedown
 import datetime
@@ -261,6 +262,23 @@ class Fun():
 
         await ctx.send("Leaderboard for mutual servers\n" + message)
         await ctx.message.delete()
+
+    @commands.command(aliases=["glyphs"])
+    async def glyph(self, ctx, glyph: str = None):
+        if not glyph:
+            allGlyphs = "`" + "`, `".join(Glyphs.glyphs.keys()) + "`"
+            await ctx.send(content=f"All available glyphs are: {allGlyphs}")
+            return
+        if not glyph.upper() in Glyphs.glyphs:
+            await ctx.send(content=f"Can't find the glyph `{glyph}`.")
+            return
+        glyph = glyph.upper()
+        url = Glyphs.glyphs[glyph]
+
+        embed = discord.Embed(title=f"{glyph.upper()}")
+        embed.set_image(url=url)
+
+        await ctx.send(embed=embed)
 
 def setup(bot):
     bot.add_cog(Fun(bot))
