@@ -79,9 +79,9 @@ class Mute():
             # except KeyError:
             #     pass
 
-    async def on_ready(self):
-        with open(f"{cDir}/muteList.json", ""):
-            pass
+    # async def on_ready(self):
+    #     with open(f"{cDir}/muteList.json", "r"):
+    #         pass
 
 def setup(bot):
     bot.add_cog(Mute(bot))
