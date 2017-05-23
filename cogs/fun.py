@@ -244,7 +244,7 @@ class Fun():
     #
     #     await ctx.send(f"The person with the most mutual guilds with {self.bot.user} is {top[0]} at {top[1]}")
 
-    @commands.command()
+    @commands.command(aliases=["mutualhighest", "highestmutuals", "mutualleaderboard"])
     async def highestmutual(self, ctx):
         try: await ctx.message.add_reaction("\u2705")
         except discord.Forbidden: pass
