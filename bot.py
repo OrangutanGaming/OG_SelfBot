@@ -22,30 +22,31 @@ startup_extensions = [
 ]
 
 cDir = os.path.dirname(os.path.abspath(__file__))
+muteListDir = f"{cDir}/muteList.json"
 
-# try:
-#     f = open(f"{cDir}/muteList.json", "x+")
-# except FileExistsError:
-#     f = open(f"{cDir}/muteList.json", "r+")
-#     json.dump({}, f)
-# f.close()
-
-# with open(f"{cDir}\muteList.json") as OmuteListFile:
-#     muteList = json.load(OmuteListFile)
-#     muteListFile = OmuteListFile
+try:
+    with open(muteListDir, "r") as f:
+        pass
+except FileNotFoundError:
+    print("Mute List not made. Creating...")
+    with open(muteListDir, "a+") as f:
+        json.dump({}, f)
+    print("muteList.json created.")
 
 bot = commands.Bot(command_prefix=Prefix.prefixes, description="A Self Bot", max_messages=1000, self_bot=True)
 bot.remove_command("help")
 bot.blank = "\u200B"
+bot.muteListDir = muteListDir
+
+
 # bot.muteList = muteList
 # bot.muteListFile = muteListFile
-
 
 def emojireplacetext(message):
     if not message: return
     try:
         output = message.content
-    except:
+    except AttributeError:
         print(f"discord.Message obj needed. {type(message)} was given.")
         return
 
@@ -56,15 +57,17 @@ def emojireplacetext(message):
 
     return output
 
+
 @bot.event
 async def on_ready():
-    gamename="with Orangutans \U0001f435"
+    gamename = "with Orangutans \U0001f435"
     await bot.change_presence(game=discord.Game(name=gamename))
     print("Logged in as:")
     print("Name: " + str(bot.user))
     print("ID: " + str(bot.user.id))
     print("Playing", gamename)
     print("Prefixes: " + Prefix.Prefix())
+
 
 @bot.event
 async def on_message(message):
@@ -77,6 +80,7 @@ async def on_message(message):
         await message.edit(content=message.content.replace("Nihaal", "*****"))
     await bot.process_commands(message)
 
+
 @bot.event
 async def on_message_edit(before, after):
     if after.author.id != bot.user.id:
@@ -85,6 +89,7 @@ async def on_message_edit(before, after):
         if not "```" in after.content:
             await after.edit(content=(emojireplacetext(after)))
     await bot.process_commands(after)
+
 
 @bot.event
 async def on_guild_remove(guild):
@@ -98,8 +103,9 @@ async def on_guild_remove(guild):
 
     await bot.get_channel(304597561615056899).send(embed=embed)
 
+
 @bot.command()
-async def load(ctx, extension_name : str):
+async def load(ctx, extension_name: str):
     try:
         bot.load_extension(extension_name)
     except (AttributeError, ImportError) as e:
@@ -107,10 +113,12 @@ async def load(ctx, extension_name : str):
         return
     await ctx.send(bot.blank + "{} loaded.".format(extension_name), delete_after=3)
 
+
 @bot.command()
-async def unload(ctx, extension_name : str):
+async def unload(ctx, extension_name: str):
     bot.unload_extension(extension_name)
     await ctx.send(bot.blank + "{} unloaded.".format(extension_name), delete_after=3)
+
 
 @bot.command()
 async def shutdown(ctx):
@@ -121,6 +129,7 @@ async def shutdown(ctx):
         await bot.close()
     except:
         await ctx.send("Error!")
+
 
 @bot.command()
 async def shutdownall(ctx):
@@ -143,15 +152,17 @@ if __name__ == "__main__":
             exc = "{}: {}".format(type(e).__name__, e)
             print("Failed to load extension {}\n{}".format(extension, exc))
 
+
 @bot.event
 async def on_command_error(ctx, error):
     if isinstance(error, commands.MissingRequiredArgument):
         print(error)
     elif isinstance(error, commands.errors.CommandNotFound):
-       await ctx.send("`{}` is not a valid command".format(ctx.invoked_with))
+        await ctx.send("`{}` is not a valid command".format(ctx.invoked_with))
     elif isinstance(error, commands.errors.CommandInvokeError):
         print(error)
     else:
         print(error)
+
 
 bot.run(SelfIDs.token, bot=False)

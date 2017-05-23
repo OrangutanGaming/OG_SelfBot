@@ -15,36 +15,32 @@ class Mute():
     def __init__(self, bot):
         self.bot = bot
 
-    # def muteListUpdate(self):
-    #     toWrite = {}
-    #     for server in self.bot.guilds:
-    #         toWrite[str(server.id)] = []
-    #         counter = -1
-    #         for channel in server.text_channels:
-    #             counter += 1
-    #             try: value = self.bot.muteList[str(server.id)][counter][str(channel.id)]
-    #                 for channelJSON in self.bot.muteList[str(server.id)]:
-    #                     if
-    #             except: value = "False"
-    #             toWrite[str(server.id)].append({
-    #                 str(channel.id): "False"
-    #             })
-    #     with open(f"{cDir}\muteList.json", "w") as muteListFile:
-    #         json.dump(toWrite, muteListFile, ensure_ascii=False, indent=4)
-    #
-    # async def on_ready(self):
-    #     self.muteListUpdate()
-    #
-    # async def on_channel_create(self, channel):
-    #     self.muteListUpdate()
-    #
-    # async def on_channel_delete(self, channel):
-    #     self.muteListUpdate()
+    def muteListAdd(self, channelID: str, keyword: str, everyone = False):
+        with open(self.bot.muteListDir, "r+") as muteListData:
+            muteListDecoded = json.load(muteListData)
+        channelID = str(channelID)
+        keyword = str(keyword)
+        muteListToWrite = muteListDecoded
+        try:
+            muteListToWrite[channelID]
+            # TODO Add list of keywords (There's already a keyword saved)
+        except NameError:
+            pass
+
+        if not everyone:
+            muteListToWrite[channelID] = keyword
+        else:
+            muteListToWrite[channelID] = "everyone" # When List of keywords added, will add everyone and here.
+            # on_message checks if it's 'everyone'
+
+        json.dump(muteListData, muteListToWrite)
+
+        return True
 
     @commands.command(aliases=["ignore"], enabled=False)
     async def mute(self, ctx, *, choice = None):
         if not choice:
-            await ctx.send("<Mention> <True/False> (Channel)")
+            await ctx.send("<Mention> <True/False> (ChannelID)")
             return
         choice = choice.lower().split(" ")
         if choice[0] == "mention":
@@ -67,11 +63,12 @@ class Mute():
                 json.dump(new, muteListFile, ensure_ascii=False, indent=4)
 
         elif choice[0] != "mention":
+            await ctx.send("`s.mute`")
             return
         await ctx.send("Set")
 
     async def on_message(self, message):
-        if "@everyone" in message.content or "@here" in message.content:
+        if "@everyone" in message.clean_content or "@here" in message.clean_content:
             if message.channel.id in pingBlacklist:
                 await message.ack()
             # with open(f"{cDir}\muteList.json", "r") as muteListFile:
@@ -81,6 +78,10 @@ class Mute():
             #         await message.channel.ack()
             # except KeyError:
             #     pass
+
+    async def on_ready(self):
+        with open(f"{cDir}/muteList.json", ""):
+            pass
 
 def setup(bot):
     bot.add_cog(Mute(bot))
