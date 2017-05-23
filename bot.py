@@ -37,6 +37,7 @@ bot = commands.Bot(command_prefix=Prefix.prefixes, description="A Self Bot", max
 bot.remove_command("help")
 bot.blank = "\u200B"
 bot.muteListDir = muteListDir
+bot.ready = False
 
 
 # bot.muteList = muteList
@@ -67,11 +68,15 @@ async def on_ready():
     print("ID: " + str(bot.user.id))
     print("Playing", gamename)
     print("Prefixes: " + Prefix.Prefix())
+    bot.ready = True
 
 
 @bot.event
 async def on_message(message):
     if message.author.id != bot.user.id:
+        return
+    if not bot.ready:
+        await message.channel.send("I'm still loading")
         return
     if "[" in message.content:
         if "`" not in message.content and "\u200B" not in message.content:
