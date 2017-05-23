@@ -24,7 +24,8 @@ class Clear():
                 else:
                     tmp = await ctx.send(self.bot.blank + "Deleted {} messages".format(count))
                 await asyncio.sleep(3)
-                await ctx.channel.delete_messages([tmp, ctx.message])
+                await ctx.message.delete()
+                await tmp.delete()
 
 
             except discord.Forbidden as error:
