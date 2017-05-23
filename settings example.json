@@ -1,4 +1,6 @@
 {
   "token":"",
-  "password":""
+  "password":"",
+  "imgurID": "",
+  "imgurSecret": ""
 }

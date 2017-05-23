@@ -8,6 +8,8 @@ with open(f"{cDir}/settings.json") as data_file:
 
 token = settings["token"]
 password = settings["password"]
+imgur_clientID = settings["imgurID"]
+imgur_Secret = settings["imgurSecret"]
 
 if token == "":
     print("No Token Given")
