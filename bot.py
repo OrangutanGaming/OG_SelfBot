@@ -34,8 +34,7 @@ except FileNotFoundError:
         json.dump({}, f)
     print("muteList.json created.")
 
-bot = commands.Bot(command_prefix=Prefix.prefixes, description="A Self Bot", max_messages=1000, self_bot=True,
-                   fetch_offline_members=False)
+bot = commands.Bot(command_prefix=Prefix.prefixes, description="A Self Bot", max_messages=1000, self_bot=True)
 bot.remove_command("help")
 bot.blank = "\u200B"
 bot.muteListDir = muteListDir
