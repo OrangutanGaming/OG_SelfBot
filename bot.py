@@ -3,7 +3,8 @@ from discord.ext import commands
 import SelfIDs
 import cogs.utils.prefix as Prefix
 import cogs.emojis as Emojis
-import os, json
+import os.path
+import json
 import datetime
 
 startup_extensions = [
