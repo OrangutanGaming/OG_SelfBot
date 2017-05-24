@@ -68,7 +68,7 @@ class Mute():
         await ctx.send("Set")
 
     async def on_message(self, message):
-        if "@everyone" in message.clean_content or "@here" in message.clean_content:
+        if "@everyone" in message.clean_content or "@here" in message.content:
             if message.channel.id in pingBlacklist:
                 await message.ack()
             # with open(f"{cDir}\muteList.json", "r") as muteListFile:
