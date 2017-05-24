@@ -126,7 +126,7 @@ class Bot():
         await ctx.message.edit(content="", embed=embed)
 
 
-    @commands.command()
+    @commands.command(aliases=["membercount"])
     async def member_count(self, ctx):
         await ctx.message.edit(content="`{0.name}` has {0.member_count} members.".format(ctx.guild))
 
