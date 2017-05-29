@@ -137,7 +137,8 @@ class Fun():
         channels = []
         for channel in ctx.guild.text_channels:
             channels.append(channel.name.title())
-        await ctx.message.edit(content=self.bot.blank + f"All text channels on the server {ctx.guild.name}: `" + "`, `".join(channels) + "`")
+        await ctx.message.edit(content=self.bot.blank + f"All text channels on the server "
+                                                        f"`{ctx.guild.name}`: `" + "`, `".join(channels) + "`")
 
     @commands.command()
     async def roles(self, ctx):
@@ -279,6 +280,23 @@ class Fun():
         embed.set_image(url=url)
 
         await ctx.send(embed=embed)
+
+    @commands.command()
+    async def charinfo(self, ctx, *, characters: str):
+        """Gives unicode info on an emoji."""
+
+        if len(characters) > 15:
+            await ctx.send(self.bot.blank + f"Too many characters ({len(characters)}/15)")
+            return
+
+        fmt = "`\\U{0:>08}`: {1} - {2} \N{EM DASH} <http://www.fileformat.info/info/unicode/char/{0}>"
+
+        def to_string(c):
+            digit = format(ord(c), "x")
+            name = unicodedata.name(c, "Name not found.")
+            return fmt.format(digit, name, c)
+
+        await ctx.message.edit(content=self.bot.blank + "\n".join(map(to_string, characters)))
 
 def setup(bot):
     bot.add_cog(Fun(bot))
