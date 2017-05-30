@@ -78,8 +78,10 @@ async def on_message(message):
     if message.author.id != bot.user.id:
         return
     if not bot.ready:
-        # await message.channel.send("I'm still loading")
-        return
+        for prefix in prefixes:
+            if message.content.startswith(prefix):
+                await message.channel.send("I am still loading.")
+                return
     if "[" in message.content:
         if "`" not in message.content and "\u200B" not in message.content:
             await message.edit(content=(emojireplacetext(message)))
