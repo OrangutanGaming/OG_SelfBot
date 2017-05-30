@@ -19,7 +19,8 @@ startup_extensions = [
     "cogs.serverinfo",
     "cogs.count",
     "cogs.mute",
-    "cogs.discrim"
+    "cogs.discrim",
+    "cogs.guildlogs"
 ]
 
 cDir = os.path.dirname(os.path.abspath(__file__))
@@ -112,6 +113,7 @@ async def on_guild_remove(guild):
 
 @bot.command()
 async def load(ctx, extension_name: str):
+    """Loads a module."""
     try:
         bot.load_extension(extension_name)
     except (AttributeError, ImportError) as e:
@@ -122,8 +124,20 @@ async def load(ctx, extension_name: str):
 
 @bot.command()
 async def unload(ctx, extension_name: str):
+    """Unloads a module"""
     bot.unload_extension(extension_name)
     await ctx.send(bot.blank + "{} unloaded.".format(extension_name), delete_after=3)
+
+@bot.command(name="reload")
+async def _reload(ctx, *, module: str):
+    """Reloads a module."""
+    try:
+        bot.unload_extension(module)
+        bot.load_extension(module)
+    except Exception as e:
+        await ctx.send("{}: {}".format(type(e).__name__, e))
+    else:
+        await ctx.send(":thumbsup:")
 
 
 @bot.command()
