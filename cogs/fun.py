@@ -23,13 +23,16 @@ class Fun():
         chars = list(text)
 
         for char in chars:
-            Int = char.isdigit()
 
-            if Int:
-                msg += f":{p.number_to_words(int(char))}: "
-            else:
-                msg += f":regional_indicator_{char}: "
+            if char.isdigit():
+                msg += f"{char}\u20e3"
+            elif char.isalpha():
+                msg += f":regional_indicator_{char}:"
                 # " ".join(["   " if x==" " else ":regional_indicator_{}:".format(x) for x in "hm hm"])
+            elif char == " ":
+                msg += "   "
+            else:
+                msg += char
 
         return msg
 
