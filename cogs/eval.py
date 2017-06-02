@@ -59,6 +59,8 @@ class Eval():
 
     @commands.command(name="exec", aliases = ["ex", "exed"])
     async def _exec(self, ctx, *, body: str):
+        if "*****" in body:
+            return
         env = {
             "bot": self.bot,
             "ctx": ctx,
