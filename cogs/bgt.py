@@ -30,7 +30,7 @@ class BGT():
         await self.bot.wait_until_ready()
         while True:
             now = datetime.datetime.utcnow()
-            if now.date() == datetime.date(2017, 6, 12) and now.time() >= datetime.time(6, 4):
+            if now.date() == datetime.date(2017, 6, 12) and now.time() >= datetime.time(6, 6):
                 await self.bot.get_channel(281483874234793984).send("Hi")
                 break
 
