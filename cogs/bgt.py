@@ -6,33 +6,38 @@ import datetime
 class BGT():
     def __init__(self, bot):
         self.bot = bot
-        # self.bg_task = self.bot.loop.create_task(self.AllianceAnnounceStart())
-        # self.bg_task = self.bot.loop.create_task(self.AllianceAnnounceEnd())
-        self.bg_task = self.bot.loop.create_task(self.TimeTest())
-
-    async def AllianceAnnounceStart(self):
-        await self.bot.wait_until_ready()
-        while True:
-            now = datetime.datetime.utcnow()
-            if now.date() == datetime.date(2017, 6, 12) and now.time() >= datetime.time(7):
-                await self.bot.get_channel(282207136354926594).send("@everyone And so it begins!")
-                break
+        self.bg_task = self.bot.loop.create_task(self.AllianceAnnounceEnd())
+        # self.bg_task = self.bot.loop.create_task(self.TimeTest())
 
     async def AllianceAnnounceEnd(self):
         await self.bot.wait_until_ready()
         while True:
             now = datetime.datetime.utcnow()
-            if now.date() == datetime.date(2017, 6, 12) and now.time() >= datetime.time(7):
-                await self.bot.get_channel(282207136354926594).send("@everyone And so it begins!")
-                break
+            targetD = "12.6.2017".split(".")
+            targetT = "7:45".split(":")
+
+            targetT = [int(t) for t in targetT]
+            targetD = [int(t) for t in targetD]
+            if now.date() == datetime.date(targetD[2], targetD[1], targetD[0]) and \
+                datetime.time(targetT[0], targetT[1]) <= now.time() <= datetime.time(targetT[0], targetT[1] + 1):
+                await self.bot.get_channel(281483874234793984).send("The event is now over! Stay tuned for prizes!")
+                # break
+            await asyncio.sleep(60)
 
     async def TimeTest(self):
         await self.bot.wait_until_ready()
         while True:
             now = datetime.datetime.utcnow()
-            if now.date() == datetime.date(2017, 6, 12) and now.time() >= datetime.time(6, 10):
+            targetD = "5.6.2017".split(".")
+            targetT = "15:24".split(":")
+
+            targetT = [int(t) for t in targetT]
+            targetD = [int(t) for t in targetD]
+            if now.date() == datetime.date(targetD[2], targetD[1], targetD[0]) and \
+                datetime.time(targetT[0], targetT[1]) <= now.time() <= datetime.time(targetT[0], targetT[1]+1):
                 await self.bot.get_channel(281483874234793984).send("Hi")
                 break
+            await asyncio.sleep(60)
 
 
     @commands.command()
